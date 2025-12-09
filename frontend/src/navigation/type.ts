@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import VotersScreen from "../screens/VotersScreen";
 import VoterDetailScreen from "../screens/VoterDetailScreen";
-import { Voter } from "../api/voterApi";
+import { Voter } from "../api/type";
 
 export type RootStackParamList = {
   Voters: undefined;

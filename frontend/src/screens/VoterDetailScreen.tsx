@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/type";
-import { Voter } from "../api/voterApi";
+import { Voter } from "../api/type";
 
 type Props = NativeStackScreenProps<RootStackParamList, "VoterDetail">;
 
