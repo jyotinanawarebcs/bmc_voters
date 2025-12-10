@@ -10,7 +10,19 @@ import { RootStackParamList } from './types'; // 💡 FIX: Imported the complete
 
 // ❌ DELETED: Removed the local, incomplete definition of RootStackParamList
 
+<<<<<<< Updated upstream
 const Stack = createNativeStackNavigator<RootStackParamList>(); // Use the imported type
+=======
+  // This is the single, correct route for the profile view
+  VoterProfileScreen: {
+    voterId: number;
+    voterData: Voter;
+  };
+   VoterFamilyScreenAll: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+>>>>>>> Stashed changes
 
 export default function AppNavigator() {
   return (
@@ -35,9 +47,15 @@ export default function AppNavigator() {
 
       {/* This screen name is now valid because it is in the imported RootStackParamList */}
       <Stack.Screen
+<<<<<<< Updated upstream
         name="ListOptionsScreen" 
         component={ListOptionsScreen}
         options={{ headerShown: false }} // Ensure header is hidden here too, since you use a custom one
+=======
+        name="VoterFamilyScreenAll"
+        component={VoterFamilyScreenAll}
+         
+>>>>>>> Stashed changes
       />
 
       <Stack.Screen
