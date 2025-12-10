@@ -40,7 +40,7 @@ export default function ListOptionsScreen() {
       title: "Alphabetical List",
       desc: "Sort voters A-Z",
       icon: <Feather name="type" size={26} color="#2F67FF" />,
-      targetScreen: 'VoterListScreen', // Example: navigate to a filtered list
+      targetScreen: '', // Example: navigate to a filtered list
     },
     {
       id: 2,
@@ -49,7 +49,7 @@ export default function ListOptionsScreen() {
       icon: (
         <MaterialCommunityIcons name="home-group" size={28} color="#2F67FF" />
       ),
-      targetScreen: 'VoterListScreen',
+      targetScreen: '',
     },
     {
       id: 3,
@@ -65,28 +65,28 @@ export default function ListOptionsScreen() {
       icon: (
         <MaterialCommunityIcons name="city-variant-outline" size={28} color="#2F67FF" />
       ),
-      targetScreen: 'VoterListScreen',
+      targetScreen: '',
     },
     {
       id: 5,
       title: "By Polling Station",
       desc: "Locate by booth",
       icon: <Feather name="map-pin" size={28} color="#2F67FF" />,
-      targetScreen: 'VoterListScreen',
+      targetScreen: '',
     },
     {
       id: 6,
       title: "By Worker",
       desc: "Assigned Karyakarta",
       icon: <Feather name="user-check" size={28} color="#2F67FF" />,
-      targetScreen: 'VoterListScreen',
+      targetScreen: '',
     },
     {
       id: 7,
       title: "By Surname",
       desc: "Search via last name",
       icon: <Feather name="users" size={26} color="#2F67FF" />,
-      targetScreen: 'SurnameDivisionScreen', // Assuming you have a specific screen for this
+      targetScreen: 'SurnameWiseScreen', // Assuming you have a specific screen for this
     },
     {
       id: 8,
@@ -95,7 +95,7 @@ export default function ListOptionsScreen() {
       icon: (
         <MaterialCommunityIcons name="palette" size={28} color="#2F67FF" />
       ),
-      targetScreen: 'VoterListScreen',
+      targetScreen: '',
     },
     {
       id: 9,
@@ -104,14 +104,14 @@ export default function ListOptionsScreen() {
       icon: (
         <MaterialCommunityIcons name="contacts-outline" size={28} color="#2F67FF" />
       ),
-      targetScreen: 'VoterListScreen',
+      targetScreen: '',
     },
     {
       id: 10,
       title: "Voters Without Mobile",
       desc: "Missing contact info",
       icon: <Feather name="x-circle" size={28} color="#2F67FF" />,
-      targetScreen: 'VoterListScreen',
+      targetScreen: '',
     },
  
   ];

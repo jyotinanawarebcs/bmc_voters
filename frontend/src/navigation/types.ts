@@ -18,6 +18,7 @@ export type RootStackParamList = {
   DataScreen: undefined;
   SettingsScreen: undefined;
   DivisionScreen: undefined;
+  SurnameWiseScreen:undefined;
   
   // Screens requiring parameters:
   VoterProfileScreen: { 

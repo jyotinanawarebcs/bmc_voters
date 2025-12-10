@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,13 +6,20 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
+  Platform,
+  useWindowDimensions,
 } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
 import Feather from "react-native-vector-icons/Feather";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 
-const WARD = [
+// --- IMPORT REUSABLE LAYOUT COMPONENTS & TYPES ---
+import ScreenWrapper from "../navigation/ScreenWrapper";
+import FAB from "../components/FAB"; 
+import { RootStackParamList } from "../navigation/types"; 
+
+// --- DATA ---
+const WARD_DATA = [
   { id: "1", name: "Chalisgaon - 1", percent: "7.1282", count: "6752" },
   { id: "2", name: "Chalisgaon - 2", percent: "5.3915", count: "5107" },
   { id: "3", name: "Chalisgaon - 3", percent: "5.8771", count: "5567" },
@@ -21,23 +28,28 @@ const WARD = [
   { id: "6", name: "Chalisgaon - 6", percent: "5.5995", count: "5304" },
 ];
 
-export default function wardScreen() {
-  return (
-    <SafeAreaView style={styles.container}>
+// --- MAIN SCREEN COMPONENT ---
+export default function DivisionScreen() {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { width } = useWindowDimensions();
+  const isWeb = Platform.OS === "web" && width > 768;
+  
+  // State for search input (optional, but good practice)
+  const [search, setSearch] = useState("");
 
-      {/* ================= HEADER ================= */}
-      <LinearGradient
-        colors={["#2F80ED", "#56CCF2"]}
-        style={styles.header}
-      >
-        <Text style={styles.headerTitle}>By Ward</Text>
+  // 💡 1. HANDLER FOR SIDEBAR MENU CLICKS
+  const handleMenuNavigation = (menuId: string) => {
+    if (menuId === 'dashboard') {
+        navigation.navigate('Dashboard'); 
+    } else if (menuId === 'voterlist') {
+        navigation.navigate('VoterListScreen'); 
+    }
+    // Add logic for other menu items
+  };
 
-        <View style={styles.adminTag}>
-          <Feather name="user" size={14} color="#fff" />
-          <Text style={styles.adminText}>Chalisgaon Admin</Text>
-        </View>
-      </LinearGradient>
-
+  const MainContent = () => (
+    <View style={styles.mainContent}>
+      
       {/* ================= SEARCH BAR ================= */}
       <View style={styles.searchWrapper}>
         <Feather name="search" size={18} color="#8a8a8a" style={{ marginRight: 8 }} />
@@ -45,24 +57,26 @@ export default function wardScreen() {
           placeholder="Search Wards..."
           placeholderTextColor="#999"
           style={styles.searchInput}
+          value={search}
+          onChangeText={setSearch}
         />
       </View>
 
       {/* ================= TOTAL BADGE ================= */}
       <View style={styles.totalBadge}>
         <Text style={styles.totalLabel}>Total:</Text>
-        <Text style={styles.totalValue}>{WARD.length}</Text>
+        <Text style={styles.totalValue}>{WARD_DATA.length}</Text>
       </View>
 
       {/* ================= CARDS LIST ================= */}
       <FlatList
-        data={WARD}
+        data={WARD_DATA}
         keyExtractor={(item) => item.id}
         numColumns={2}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
-        contentContainerStyle={{ paddingBottom: 120 }}
+        columnWrapperStyle={styles.columnWrapper}
+        contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <TouchableOpacity style={styles.card} activeOpacity={0.8}>
             {/* Percentage & Count */}
             <View style={styles.rowBetween}>
               <View>
@@ -85,61 +99,51 @@ export default function wardScreen() {
               <Text style={styles.divisionName}>{item.name}</Text>
               <Feather name="more-vertical" size={20} color="#666" />
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
-
-      {/* ================= FLOATING BUTTONS ================= */}
-      <TouchableOpacity style={styles.fabGreen}>
-        <MaterialIcons name="table-chart" size={24} color="#fff" />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.fabOrange}>
-        <MaterialIcons name="picture-as-pdf" size={24} color="#fff" />
-      </TouchableOpacity>
-
-      {/* ================= FOOTER ================= */}
+      
+      {/* ================= FOOTER (Kept local, though usually ScreenWrapper handles this) ================= */}
       <Text style={styles.footerText}>
         © 2023 Chalisgaon Municipal Council. All rights reserved.
       </Text>
 
-    </SafeAreaView>
+    </View>
+  );
+
+  return (
+    <ScreenWrapper
+        // You should define an activeMenuId for this screen if it's accessible from the sidebar
+        activeMenuId="pollingbooths" // Example ID, adjust as needed
+        headerTitle="Division List (By Ward)"
+        headerSubtitle={isWeb ? "Dashboard > Division Management > By Ward" : undefined}
+        onMenuItemPress={handleMenuNavigation} // Pass the required navigation handler
+    >
+        {MainContent()}
+
+        {/* ================= FLOATING BUTTONS ================= */}
+        <TouchableOpacity style={styles.fabGreen}>
+            <MaterialIcons name="table-chart" size={24} color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.fabOrange}>
+            <MaterialIcons name="picture-as-pdf" size={24} color="#fff" />
+        </TouchableOpacity>
+        
+        {!isWeb && (
+            // FAB for mobile menu, placed below the other FABs
+            <FAB iconName="menu" onPress={() => console.log('Open Mobile Menu')} />
+        )}
+    </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  // Removed container, header, adminTag, and headerTitle/Text styles, 
+  // as ScreenWrapper handles the overall container and header.
+  
+  mainContent: {
     flex: 1,
-    backgroundColor: "#eef3f8",
-  },
-
-  /* HEADER */
-  header: {
-    paddingVertical: 20,
-    paddingHorizontal: 18,
-    borderBottomLeftRadius: 22,
-    borderBottomRightRadius: 22,
-  },
-  headerTitle: {
-    fontSize: 20,
-    color: "#fff",
-    fontWeight: "700",
-  },
-  adminTag: {
-    position: "absolute",
-    right: 18,
-    top: 24,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 20,
-  },
-  adminText: {
-    color: "#fff",
-    fontSize: 12,
+    backgroundColor: "#eef3f8", // Use the original background color here
   },
 
   /* SEARCH BAR */
@@ -153,10 +157,14 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 12,
     elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
   searchInput: {
     flex: 1,
     fontSize: 14,
+    paddingVertical: 0,
   },
 
   /* TOTAL BADGE */
@@ -165,6 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginRight: 16,
     marginBottom: 10,
+    marginTop: 10, // Added slight top margin for spacing
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 20,
@@ -172,6 +181,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
     elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
   totalLabel: {
     fontSize: 13,
@@ -183,7 +195,14 @@ const styles = StyleSheet.create({
     color: "#2F80ED",
   },
 
-  /* CARD */
+  /* CARDS LIST */
+  listContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 20, // Reduced as FABs are outside
+  },
+  columnWrapper: { 
+    justifyContent: "space-between",
+  },
   card: {
     width: "47%",
     backgroundColor: "#fff",
@@ -191,6 +210,9 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
     elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   rowBetween: {
     flexDirection: "row",
@@ -230,6 +252,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 50,
     elevation: 4,
+    zIndex: 10, // Ensure FABs are on top
   },
   fabOrange: {
     position: "absolute",
@@ -239,6 +262,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 50,
     elevation: 4,
+    zIndex: 10, // Ensure FABs are on top
   },
 
   /* FOOTER */
@@ -246,6 +270,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 12,
     color: "#777",
-    marginBottom: 10,
+    paddingTop: 10, // Added top padding to separate from list
+    paddingBottom: 10, // Added bottom padding
   },
 });

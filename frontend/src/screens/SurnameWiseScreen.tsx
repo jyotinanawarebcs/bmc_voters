@@ -6,8 +6,16 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
+  Platform, // Import Platform
+  useWindowDimensions, // Import useWindowDimensions
 } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { RootStackParamList } from "../navigation/types"; // Import RootStackParamList
+
+// --- IMPORT REUSABLE LAYOUT COMPONENTS ---
+import ScreenWrapper from "../navigation/ScreenWrapper";
+import FAB from "../components/FAB"; // Assuming you use a FAB for mobile menu
 
 const sampleData = [
   { id: "1", name: "Patil", percentage: 17.4319, count: 1177 },
@@ -18,30 +26,30 @@ const sampleData = [
   { id: "6", name: "Wagh", percentage: 2.3252, count: 157 },
 ];
 
-export default function DivisionwiseSurname() {
+export default function SurnameDivisionScreen() {
   const [searchText, setSearchText] = useState("");
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { width } = useWindowDimensions();
+  const isWeb = Platform.OS === "web" && width > 768;
+
+  // 💡 1. HANDLER FOR SIDEBAR MENU CLICKS
+  const handleMenuNavigation = (menuId: string) => {
+    if (menuId === 'dashboard') {
+        navigation.navigate('Dashboard'); 
+    } else if (menuId === 'voterlist') {
+        navigation.navigate('VoterListScreen'); 
+    }
+    // Add logic for other menu items as needed
+  };
 
   const filtered = sampleData.filter((item) =>
     item.name.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  return (
-    <View style={styles.container}>
-      {/* ================= HEADER ================= */}
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <Feather name="arrow-left" size={22} color="#fff" />
-        </TouchableOpacity>
-
-        <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>Division-wise : Chalisgaon - 1</Text>
-          <Text style={styles.headerSubtitle}>** Surname-wise **</Text>
-        </View>
-
-        <TouchableOpacity>
-          <Feather name="moon" size={22} color="#fff" />
-        </TouchableOpacity>
-      </View>
+  
+  // 💡 2. Main content separated for ScreenWrapper
+  const MainContent = () => (
+    <View style={styles.contentWrapper}>
+      {/* -------------------- Removed manual header content -------------------- */}
 
       {/* ================= SEARCH + TOTAL ================= */}
       <View style={styles.searchRow}>
@@ -50,6 +58,7 @@ export default function DivisionwiseSurname() {
           <TextInput
             style={styles.searchInput}
             placeholder="Search Surname..."
+            placeholderTextColor="#999"
             value={searchText}
             onChangeText={setSearchText}
           />
@@ -92,37 +101,47 @@ export default function DivisionwiseSurname() {
           </View>
         )}
       />
-
-      {/* ================= FLOATING BUTTONS ================= */}
-      <View style={styles.fabContainer}>
-        <TouchableOpacity style={styles.fab}>
-          <Feather name="file-text" size={22} color="#fff" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.fab}>
-          <Feather name="bar-chart-2" size={22} color="#fff" />
-        </TouchableOpacity>
-      </View>
     </View>
+  );
+
+  return (
+    // 💡 3. Wrap everything in ScreenWrapper
+    <ScreenWrapper
+      activeMenuId="surname" // Assuming you have a menu item for surname view
+      headerTitle="Surname List"
+      headerSubtitle={isWeb ? "Division-wise > Surname Breakdown" : undefined}
+      showBackArrow={!isWeb} // Show back arrow on mobile
+      onMenuItemPress={handleMenuNavigation}
+    >
+        {MainContent()}
+
+        {/* ================= FLOATING BUTTONS ================= */}
+        <View style={styles.fabContainer}>
+          <TouchableOpacity style={styles.fab}>
+            <Feather name="file-text" size={22} color="#fff" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.fab}>
+            <Feather name="bar-chart-2" size={22} color="#fff" />
+          </TouchableOpacity>
+        </View>
+
+        {!isWeb && (
+            // Use the FAB for mobile menu navigation
+            <FAB iconName="menu" onPress={() => console.log('Open Mobile Menu')} />
+        )}
+    </ScreenWrapper>
   );
 }
 
 // ====================== STYLES ======================
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#eef2f7" },
+  // Removed container and manual header styles
 
-  /* ---------- HEADER ---------- */
-  header: {
-    backgroundColor: "#2F67FF",
-    paddingTop: 45,
-    paddingBottom: 18,
-    paddingHorizontal: 16,
-    flexDirection: "row",
-    alignItems: "center",
+  contentWrapper: { 
+      flex: 1, 
+      backgroundColor: "#eef2f7" // Keep the main background color here
   },
-  headerCenter: { flex: 1, marginLeft: 12 },
-  headerTitle: { color: "#fff", fontSize: 17, fontWeight: "700" },
-  headerSubtitle: { color: "#eaeaff", fontSize: 12, marginTop: 2 },
 
   /* ---------- SEARCH & TOTAL ---------- */
   searchRow: {
@@ -148,6 +167,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: "#333",
+    paddingVertical: 0, // Reset padding
   },
   totalBadge: {
     backgroundColor: "#fff",
@@ -209,6 +229,7 @@ const styles = StyleSheet.create({
     bottom: 40,
     alignItems: "center",
     gap: 15,
+    zIndex: 10, // Ensure FABs are on top
   },
   fab: {
     backgroundColor: "#2F67FF",
