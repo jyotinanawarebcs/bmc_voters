@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-xb$$s+p-^*gcjl9+#cqqsow-lj(0v128ky&3e96di04uc6sst+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.7','0.0.0.0']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.1.13','0.0.0.0']
 
 # Application definition
 
@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'voter_db',
         'USER': 'postgres',
-        'PASSWORD': 'admin',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '5432',
     }
