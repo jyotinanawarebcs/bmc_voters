@@ -9,7 +9,8 @@ import {
   useWindowDimensions, 
 } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useNavigation, DrawerActions, NavigationProp } from "@react-navigation/native";
+import { RootStackParamList } from "../navigation/types"; // Assuming you import RootStackParamList here if using typed navigation
 
 // --- IMPORT REUSABLE LAYOUT COMPONENTS ---
 import ScreenWrapper from "../navigation/ScreenWrapper"; 
@@ -23,7 +24,7 @@ const DATA = [
     title: "Search",
     subtitle: "Find properties, records, and documents.",
     icon: "search",
-    screen: "SearchScreen",
+    screen: "VoterListScreen",
   },
   {
     id: "2",
@@ -37,7 +38,8 @@ const DATA = [
     title: "Lists",
     subtitle: "View beneficiary and application lists.",
     icon: "list",
-    screen: "VoterListScreen",
+    // 💡 The card press already handles navigation via this screen name
+    screen: "ListOptionsScreen", 
   },
   {
     id: "4",
@@ -80,7 +82,8 @@ const DashboardGridCard = ({ item, handlePress, cardWidth }: any) => (
 
 
 export default function HomeScreen() {
-  const navigation = useNavigation<any>();
+  // Use typed navigation if RootStackParamList is available, otherwise use 'any' as you did.
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>(); 
   const { width } = useWindowDimensions();
 
   const isWeb = Platform.OS === 'web' && width > 768; 
@@ -88,10 +91,25 @@ export default function HomeScreen() {
   const cardWidth = isWeb ? '31%' : '48%';
 
 
-  const handleCardPress = (screen?: string) => {
+  // 💡 1. HANDLER FOR CARD PRESS (Already working for "Lists" -> ListOptionsScreen)
+  const handleCardPress = (screen?: keyof RootStackParamList) => {
     if (screen) {
-      navigation.navigate(screen); 
+      // Ensure the screen exists in your RootStackParamList
+      navigation.navigate(screen as any); 
     }
+  };
+  
+  // 💡 2. HANDLER FOR SIDEBAR MENU CLICKS (New required function)
+  const handleMenuNavigation = (menuId: string) => {
+    // Assuming the Dashboard's ID in your MENU_ITEMS is 'dashboard'
+    if (menuId === 'dashboard') {
+        // Already on this screen, but included for completeness
+        console.log('Already on Dashboard');
+        // If navigating to other screens via sidebar:
+    } else if (menuId === 'voterlist') {
+        navigation.navigate('VoterListScreen'); 
+    }
+    // Add logic for other menu items as needed
   };
 
   const MainContent = () => (
@@ -119,6 +137,9 @@ export default function HomeScreen() {
       headerTitle="Chalisgaon Municipal Council" 
       // headerSubtitle={isWeb ? "Digital Citizen Portal" : undefined} 
       showBackArrow={false} // Hides the back arrow
+      
+      // 💡 3. PASS THE REQUIRED SIDEBAR NAVIGATION HANDLER
+      onMenuItemPress={handleMenuNavigation}
     >
       {MainContent()}
       

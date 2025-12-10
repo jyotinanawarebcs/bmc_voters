@@ -12,7 +12,7 @@ import LinearGradient from "react-native-linear-gradient";
 import Feather from "react-native-vector-icons/Feather";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-const DIVISIONS = [
+const WARD = [
   { id: "1", name: "Chalisgaon - 1", percent: "7.1282", count: "6752" },
   { id: "2", name: "Chalisgaon - 2", percent: "5.3915", count: "5107" },
   { id: "3", name: "Chalisgaon - 3", percent: "5.8771", count: "5567" },
@@ -21,7 +21,7 @@ const DIVISIONS = [
   { id: "6", name: "Chalisgaon - 6", percent: "5.5995", count: "5304" },
 ];
 
-export default function DivisionScreen() {
+export default function wardScreen() {
   return (
     <SafeAreaView style={styles.container}>
 
@@ -30,7 +30,7 @@ export default function DivisionScreen() {
         colors={["#2F80ED", "#56CCF2"]}
         style={styles.header}
       >
-        <Text style={styles.headerTitle}>By Division</Text>
+        <Text style={styles.headerTitle}>By Ward</Text>
 
         <View style={styles.adminTag}>
           <Feather name="user" size={14} color="#fff" />
@@ -42,7 +42,7 @@ export default function DivisionScreen() {
       <View style={styles.searchWrapper}>
         <Feather name="search" size={18} color="#8a8a8a" style={{ marginRight: 8 }} />
         <TextInput
-          placeholder="Search divisions..."
+          placeholder="Search Wards..."
           placeholderTextColor="#999"
           style={styles.searchInput}
         />
@@ -51,12 +51,12 @@ export default function DivisionScreen() {
       {/* ================= TOTAL BADGE ================= */}
       <View style={styles.totalBadge}>
         <Text style={styles.totalLabel}>Total:</Text>
-        <Text style={styles.totalValue}>{DIVISIONS.length}</Text>
+        <Text style={styles.totalValue}>{WARD.length}</Text>
       </View>
 
       {/* ================= CARDS LIST ================= */}
       <FlatList
-        data={DIVISIONS}
+        data={WARD}
         keyExtractor={(item) => item.id}
         numColumns={2}
         columnWrapperStyle={{ justifyContent: "space-between" }}

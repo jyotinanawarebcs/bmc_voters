@@ -1,5 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import VotersScreen from "../screens/VotersScreen";
+
 import VoterDetailScreen from "../screens/VoterDetailScreen";
 import { Voter } from "../api/type";
 

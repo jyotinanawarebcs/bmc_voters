@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Platform, useWindowDimensions, ScrollView, ViewStyle } from 'react-native'; // 💡 Import ViewStyle
+import { View, StyleSheet, Platform, useWindowDimensions, ScrollView, ViewStyle } from 'react-native'; 
 import Sidebar from '../components/Sidebar'; 
 import HeaderBar from '../components/HeaderBar'; 
 
@@ -29,9 +29,11 @@ interface ScreenWrapperProps {
   headerSubtitle?: string;
   /** Controls the visibility of the back arrow. */
   showBackArrow?: boolean; 
+  /** 💡 FIX 1: ADD THE MISSING PROP DEFINITION */
+  onMenuItemPress: (menuId: string) => void; 
 }
 
-// 💡 FIX: Define the web-only transition styles outside of StyleSheet.create
+// --- Web-only transition styles ---
 const webTransitionStyles: ViewStyle = Platform.OS === 'web' ? {
   transitionDuration: '300ms',
   transitionProperty: 'width',
@@ -47,6 +49,8 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   headerTitle,
   headerSubtitle,
   showBackArrow = true, 
+  // 💡 FIX 2: DESTRUCTURE THE NEW PROP
+  onMenuItemPress,
 }) => {
   const { width } = useWindowDimensions();
   const isWeb = Platform.OS === 'web' && width > 768;
@@ -94,11 +98,12 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
             { width: sidebarWidth },
             webTransitionStyles // 💡 Apply conditional web styles here
         ]}>
-            {/* Sidebar Component: Pass collapsed state */}
+            {/* 💡 FIX 3: PASS THE PROP DOWN TO THE SIDEBAR COMPONENT */}
             <Sidebar 
                 activeId={activeMenuId} 
                 menuItems={MENU_ITEMS} 
                 isCollapsed={!isSidebarOpen} 
+                onPress={onMenuItemPress} 
             />
         </View>
         

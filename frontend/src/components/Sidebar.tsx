@@ -13,9 +13,12 @@ interface SidebarProps {
     menuItems: MenuItem[];
     /** Tells the sidebar to collapse its content */
     isCollapsed: boolean; 
+    /** 💡 FIX: ADD the required navigation handler prop */
+    onPress: (menuId: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeId, menuItems, isCollapsed }) => (
+// 💡 FIX: Destructure the new onPress prop
+const Sidebar: React.FC<SidebarProps> = ({ activeId, menuItems, isCollapsed, onPress }) => (
   <View style={styles.sidebar}>
     {/* Council Logo/Title */}
     <View style={styles.sidebarHeader}>
@@ -41,7 +44,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeId, menuItems, isCollapsed }) =
             isCollapsed ? styles.menuItemCollapsed : styles.menuItemExpanded, // Use expanded style
             activeId === item.id && styles.menuItemActive,
           ]}
-          onPress={() => console.log(`Maps to ${item.name}`)}
+          // 💡 FIX: Use the onPress prop to handle the click and pass the item ID
+          onPress={() => onPress(item.id)}
         >
           <Feather
             name={item.icon as any}
@@ -70,7 +74,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeId, menuItems, isCollapsed }) =
             styles.menuItem, 
             isCollapsed ? styles.menuItemCollapsed : styles.menuItemExpanded
         ]} 
-        onPress={() => console.log('Logout')}
+        // 💡 You can still call a specific function for Logout, or use onPress('logout')
+        onPress={() => console.log('Logout action triggered')}
       >
         <Feather name="log-out" size={20} color="#666" />
         {/* HIDE TEXT WHEN COLLAPSED */}
