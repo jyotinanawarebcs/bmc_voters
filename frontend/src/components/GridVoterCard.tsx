@@ -1,78 +1,138 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  TouchableOpacity, 
+  Platform 
+} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-
-// Assuming the Voter interface is defined in your types file
-interface Voter {
-  id: number;
-  name: string;
-  ward: string;
-  booth: string;
-  serial: string;
-  image: string;
-}
+import { Voter } from '../api/type';
 
 interface GridCardProps {
   item: Voter;
-  // Function passed down from VoterListScreen to handle navigation
   onPress: () => void;
 }
 
 const GridVoterCard: React.FC<GridCardProps> = ({ item, onPress }) => {
-  // 💡 Note: The navigation action (onPress) is attached to the whole card and the "View Details" link.
+  // Convert Django media path to absolute URL
+  const getImageUrl = () => {
+    if (!item.photo_url) {
+      return null;
+    }
+    
+    // DEBUG
+    console.log("🖼️ Image Debug for voter ID:", item.id);
+    console.log("   Original photo_url:", item.photo_url);
+    
+    // If already absolute URL
+    if (item.photo_url.startsWith('http')) {
+      console.log("   Already absolute URL");
+      return item.photo_url;
+    }
+    
+    // Convert relative path to absolute
+    const baseUrl = Platform.OS === 'android' 
+      ? 'http://10.0.2.2:8000' 
+      : 'http://localhost:8000';
+    
+    // Ensure path starts with /
+    const path = item.photo_url.startsWith('/') 
+      ? item.photo_url 
+      : `/${item.photo_url}`;
+    
+    const fullUrl = `${baseUrl}${path}`;
+    console.log("   Converted to:", fullUrl);
+    
+    return fullUrl;
+  };
+
+  const imageUrl = getImageUrl();
 
   return (
-    // 1. Navigation on entire card press
     <TouchableOpacity style={styles.gridCard} onPress={onPress} activeOpacity={0.8}>
-      {/* Green status line on the right */}
+      {/* Green Right Status Line */}
       <View style={styles.statusLine} />
 
-      {/* Top Header Content */}
+      {/* Top Header */}
       <View style={styles.gridHeader}>
-        <Image source={{ uri: item.image }} style={styles.gridAvatar} />
 
+        {/* Photo - FIXED VERSION */}
+        {imageUrl ? (
+          <Image 
+            source={{ uri: imageUrl }} 
+            style={styles.gridAvatar}
+            onError={(e) => {
+              console.log("❌ FAILED to load image:", imageUrl);
+              console.log("   Error details:", e.nativeEvent.error);
+            }}
+            onLoad={() => {
+              console.log("✅ SUCCESS: Image loaded:", imageUrl);
+            }}
+          />
+        ) : (
+          <View style={styles.placeholder}>
+            <Text style={styles.placeholderText}>
+              {item.full_name?.charAt(0) || "?"}
+            </Text>
+          </View>
+        )}
+
+        {/* Info */}
         <View style={styles.infoContainer}>
-          <Text style={styles.gridName} numberOfLines={2}>{item.name}</Text>
-          <Text style={styles.gridWard}>{item.ward}</Text>
+          <Text style={styles.gridName} numberOfLines={2}>
+            {item.full_name}
+          </Text>
 
+          {/* Ward / House No */}
+          <Text style={styles.gridWard}>
+            Ward: {item.house_no || "N/A"}
+          </Text>
+
+          {/* Badges */}
           <View style={styles.gridBadges}>
-            {/* Active Status Dot */}
-            <View style={styles.gridStatusDot} /> 
-            
-            {/* Booth Tag */}
+            <View style={styles.gridStatusDot} />
+
             <View style={styles.gridTagBlue}>
-              <Text style={styles.tagText}>Booth: {item.booth}</Text>
+              <Text style={styles.tagText}>Booth: {item.part_number || "N/A"}</Text>
             </View>
-            
-            {/* Serial Tag */}
+
             <View style={styles.gridTagOrange}>
-              <Text style={styles.tagText}>Serial: {item.serial}</Text>
+              <Text style={styles.tagText}>VoterID: {item.voter_id || "N/A"}</Text>
             </View>
           </View>
         </View>
 
-        {/* More Options Icon */}
+        {/* More Icon */}
         <Feather name="more-horizontal" size={20} color="#777" />
+
       </View>
 
-      {/* Contact Icons Row (These actions prevent card press via e.stopPropagation()) */}
+      {/* Contact Icons */}
       <View style={styles.gridContactIcons}>
-        <TouchableOpacity style={styles.iconButton} onPress={(e) => { e.stopPropagation(); console.log('Message clicked'); }}>
-            <Feather name="message-square" size={20} color="#666" />
+        <TouchableOpacity style={styles.iconButton} onPress={(e) => e.stopPropagation()}>
+          <Feather name="message-square" size={20} color="#666" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={(e) => { e.stopPropagation(); console.log('Phone clicked'); }}>
-            <Feather name="phone" size={20} color="#666" />
+        <TouchableOpacity style={styles.iconButton} onPress={(e) => e.stopPropagation()}>
+          <Feather name="phone" size={20} color="#666" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={(e) => { e.stopPropagation(); console.log('Print clicked'); }}>
-            <Feather name="printer" size={20} color="#666" />
+        <TouchableOpacity style={styles.iconButton} onPress={(e) => e.stopPropagation()}>
+          <Feather name="printer" size={20} color="#666" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={(e) => { e.stopPropagation(); console.log('Calendar clicked'); }}>
-            <Feather name="calendar" size={20} color="#666" />
+        <TouchableOpacity style={styles.iconButton} onPress={(e) => e.stopPropagation()}>
+          <Feather name="calendar" size={20} color="#666" />
         </TouchableOpacity>
       </View>
 
-      {/* 2. Navigation on "View Details" link press */}
-      <TouchableOpacity style={styles.gridDetails} onPress={onPress}> 
+      {/* View Details */}
+      <TouchableOpacity 
+        style={styles.gridDetails} 
+        onPress={(e) => {
+          e.stopPropagation();
+          onPress();
+        }}
+      >
         <Text style={styles.detailsText}>View Details</Text>
         <Feather name="arrow-right" size={14} color="#0d47a1" style={{ marginLeft: 5 }} />
       </TouchableOpacity>
@@ -82,11 +142,9 @@ const GridVoterCard: React.FC<GridCardProps> = ({ item, onPress }) => {
 
 export default GridVoterCard;
 
-// ==================== STYLES ====================
 const styles = StyleSheet.create({
   gridCard: {
-    // Width calculation for 3 columns on web and 2 on mobile, factoring in the space between
-    width: Platform.OS === 'web' ? '32%' : '48%', 
+    width: Platform.OS === 'web' ? '32%' : '48%',
     backgroundColor: "#fff",
     borderRadius: 12,
     padding: 12,
@@ -96,88 +154,121 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
+    marginBottom: 12,
   },
+
   statusLine: {
     position: "absolute",
     right: 0,
     top: 0,
     width: 4,
     height: "100%",
-    backgroundColor: "#22c55e", // Green color for active status
+    backgroundColor: "#22c55e",
     borderTopRightRadius: 12,
     borderBottomRightRadius: 12,
   },
+
   gridHeader: {
     flexDirection: "row",
     marginBottom: 8,
   },
+
   gridAvatar: {
     width: 55,
     height: 55,
     borderRadius: 10,
     marginRight: 10,
   },
+
+  placeholder: {
+    width: 55,
+    height: 55,
+    borderRadius: 10,
+    backgroundColor: "#0d47a1",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
+  },
+
+  placeholderText: {
+    color: "#fff",
+    fontSize: 22,
+    fontWeight: "700",
+  },
+
   infoContainer: {
     flex: 1,
-    paddingRight: 10, // Space for the 'more' icon
+    paddingRight: 10,
   },
+
   gridName: {
     fontSize: 15,
     fontWeight: "600",
     color: "#222",
   },
+
   gridWard: {
     fontSize: 12,
     color: "#666",
     marginTop: 2,
   },
+
   gridBadges: {
     flexDirection: "row",
     marginTop: 6,
-    alignItems: 'center',
+    alignItems: "center",
     gap: 6,
   },
+
   gridStatusDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#22c55e',
+    backgroundColor: "#22c55e",
   },
+
   gridTagBlue: {
     backgroundColor: "#e6efff",
     paddingVertical: 3,
     paddingHorizontal: 8,
     borderRadius: 6,
   },
+
   gridTagOrange: {
     backgroundColor: "#ffe8d9",
     paddingVertical: 3,
     paddingHorizontal: 8,
     borderRadius: 6,
   },
-  tagText: { fontSize: 10, color: "#444", fontWeight: '500' },
-  
+
+  tagText: {
+    fontSize: 10,
+    color: "#444",
+    fontWeight: "500",
+  },
+
   gridContactIcons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     paddingVertical: 10,
     borderTopWidth: 1,
-    borderTopColor: '#eee',
+    borderTopColor: "#eee",
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
     marginBottom: 8,
   },
+
   iconButton: {
-      padding: 5,
+    padding: 5,
   },
 
   gridDetails: {
     marginTop: 5,
     alignItems: "flex-end",
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    // alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
+
   detailsText: {
     color: "#0d47a1",
     fontSize: 13,
