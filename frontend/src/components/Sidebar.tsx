@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 5,
-    backgroundColor: '#0d2b8f',
+    backgroundColor: '#FF9933',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
@@ -158,11 +158,11 @@ const styles = StyleSheet.create({
   },
   menuItemTextActive: {
     fontWeight: '600',
-    color: '#0d2b8f',
+    color: '#FF9933',
   },
   logoutContainer: {
     borderTopWidth: 1,
-    borderTopColor: '#eee',
+    borderTopColor: '#FF9933',
     paddingTop: 10,
   },
 });

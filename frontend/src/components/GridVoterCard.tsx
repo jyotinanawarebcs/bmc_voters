@@ -134,7 +134,7 @@ const GridVoterCard: React.FC<GridCardProps> = ({ item, onPress }) => {
         }}
       >
         <Text style={styles.detailsText}>View Details</Text>
-        <Feather name="arrow-right" size={14} color="#0d47a1" style={{ marginLeft: 5 }} />
+        <Feather name="arrow-right" size={14} color="#FF9933" style={{ marginLeft: 5 }} />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     top: 0,
     width: 4,
     height: "100%",
-    backgroundColor: "#22c55e",
+    backgroundColor: "#FF9933",
     borderTopRightRadius: 12,
     borderBottomRightRadius: 12,
   },
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     width: 55,
     height: 55,
     borderRadius: 10,
-    backgroundColor: "#0d47a1",
+    backgroundColor: "#FF9933",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#22c55e",
+    backgroundColor: "#FF9933",
   },
 
   gridTagBlue: {
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   },
 
   detailsText: {
-    color: "#0d47a1",
+    color: "#FF9933",
     fontSize: 13,
     fontWeight: "600",
   },

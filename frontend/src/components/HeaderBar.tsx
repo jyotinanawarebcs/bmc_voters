@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   headerWebBlueBar: {
     height: 60,
-    backgroundColor: "#0d2b8f",
+    backgroundColor: "#FF9933",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: 'space-between',

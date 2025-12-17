@@ -1138,7 +1138,7 @@
     filterButton: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: '#0d2b8f',
+      backgroundColor: '#FF9933',
       paddingHorizontal: 15,
       paddingVertical: 10,
       borderRadius: 8,
@@ -1185,8 +1185,8 @@
     },
 
     pageBtnActive: {
-      backgroundColor: "#0d2b8f",
-      borderColor: '#0d2b8f',
+      backgroundColor: "#FF9933",
+      borderColor: '#FF9933',
     },
 
     pageBtnDisabled: {
