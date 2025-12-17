@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'voter_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv("DB_ENGINE", "django.db.backends.postgresql"),
+        'ENGINE': os.getenv("DB_ENGINE","django.db.backends.postgresql"),
         'NAME': os.getenv("DB_NAME", "voter_db1"),
         'USER': os.getenv("DB_USER", "postgres"),
         'PASSWORD': os.getenv("DB_PASSWORD", "admin"),

@@ -4,7 +4,7 @@ class Voter(models.Model):
     voter_id = models.CharField(max_length=30, unique=True, blank=True, null=True)
     part_number = models.CharField(max_length=20, blank=True, null=True)
     full_name = models.CharField(max_length=200, blank=True, null=True)
-    relative_name = models.CharField(max_length=200, blank=True, null=True)  # Father or relative
+    # relative_name = models.CharField(max_length=200, blank=True, null=True)  # Father or relative
     house_no = models.CharField(max_length=50, blank=True, null=True)
     age = models.CharField(max_length=10, null=True, blank=True)
     gender = models.CharField(

@@ -29,7 +29,7 @@ class VoterService:
                     Q(full_name__icontains=search_term) |
                     Q(voter_id__icontains=search_term) |
                     Q(part_number__icontains=search_term) |
-                    Q(relative_name__icontains=search_term) |
+                    # Q(relative_name__icontains=search_term) |
                     Q(house_no__icontains=search_term)
                 )
             
@@ -140,6 +140,6 @@ class VoterService:
             'house_no': voter.house_no,
             'age': voter.age,
             'gender': voter.get_gender_display() if voter.gender else None,
-            'relative_name': voter.relative_name,
+            # 'relative_name': voter.relative_name,
             'photo_url': voter.photo.url if voter.photo else None,  
         }

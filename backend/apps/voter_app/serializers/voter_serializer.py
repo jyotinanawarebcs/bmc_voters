@@ -12,10 +12,10 @@ class VoterListSerializer(serializers.ModelSerializer):
         model = Voter
         fields = [
             'id', 'voter_id', 'full_name', 'part_number',
-            'house_no', 'age', 'gender_display', 'relative_name',
+            'house_no', 'age', 'gender_display', 
             'photo_url'
         ]
-
+# 'relative_name',
     def get_gender_display(self, obj):
         return GENDER_CHOICES.get(obj.gender, 'Not Specified')
 
@@ -39,7 +39,7 @@ class VoterDetailSerializer(serializers.ModelSerializer):
         model = Voter
         fields = [
             'id', 'voter_id', 'part_number', 'full_name',
-            'relative_name', 'house_no', 'age', 'gender',
+             'house_no', 'age', 'gender',
             'gender_display', 'photo', 'photo_url',
             'created_at', 'updated_at'
         ]
